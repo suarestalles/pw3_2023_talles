@@ -5,31 +5,32 @@ class SecondPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.amber,
-        title: const Text('SecondPage'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add),
-              Text(
-                'TITULO SECOND PAGE',
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          const Text('Segundo Texto'),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Voltar'),
-          ),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('SecondPage'),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add),
+                Text(
+                  'TITULO SECOND PAGE',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            const Text('Segundo Texto'),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Voltar'),
+            ),
+          ],
+        ),
       ),
     );
   }

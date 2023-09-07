@@ -44,55 +44,38 @@ class _CachorroListPageState extends State<CachorroListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.amber,
-        title: const Text(
-          "Listagem de Cachorros",
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            "Listagem de Cachorros",
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            var cachorro = Cachorro(
+              nome: 'Catuaba',
+              descricao: 'Preto',
+              idade: 10,
+            );
+    
+            setState(() {
+              cachorros.add(cachorro);
+            });
+          },
+          child: const Icon(Icons.add),
+        ),
+        body: ListView.builder(
+          itemCount: cachorros.length,
+          itemBuilder: (ctx, index) {
+            return ListTile(
+              title: Text(cachorros[index].nome ?? '-'),
+              subtitle: Text(cachorros[index].descricao ?? '-'),
+            );
+          },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          var cachorro = Cachorro(
-            nome: 'Catuaba',
-            descricao: 'Preto',
-            idade: 10,
-          );
-
-          setState(() {
-            cachorros.add(cachorro);
-          });
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: ListView.builder(
-        itemCount: cachorros.length,
-        itemBuilder: (ctx, index) {
-          return ListTile(
-            title: Text(cachorros[index].nome ?? '-'),
-            subtitle: Text(cachorros[index].descricao ?? '-'),
-          );
-        },
-      ),
-
-      // body: ListView(
-      //   children: _buildCachorros(),
-      // ),
-
-      // body: SingleChildScrollView(
-      //   child: Column(
-      //     children: _buildCachorros(),
-      //     // children: [
-      //     //   // for(int i=0; i<cachorros.length; i++)
-      //     //   // ListTile(
-      //     //   //   title: Text(cachorros[i].nome ?? '-'),
-      //     //   //   subtitle: Text(cachorros[i].descricao ?? '-'),
-      //     //   // ),
-
-      //     // ],
-      //   ),
-      // ),
     );
   }
 }
