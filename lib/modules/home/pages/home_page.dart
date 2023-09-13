@@ -1,5 +1,6 @@
 import 'package:aprendendo_flutter/theme/my_colors.dart';
 import 'package:aprendendo_flutter/utils/app_routes.dart';
+import 'package:aprendendo_flutter/widgets/my_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -9,67 +10,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: Drawer(
-          child: ListView(
-            children: const [
-              UserAccountsDrawerHeader(
-                accountName: Text("Talles Suares"),
-                accountEmail: Text("tallessuares@gmail.com"),
-                currentAccountPicture: CircleAvatar(
-                  radius: 200,
-                  backgroundImage: AssetImage("assets/images/imagemUser.jpg"),
-                ),
-                currentAccountPictureSize: Size(80, 80),
-              ),
-              Card(
-                elevation: 5,
-                child: ListTile(
-                  title: Text(
-                    'Home',
-                    style: TextStyle(
-                      color: MyColors.secondaryColor,
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                elevation: 5,
-                child: ListTile(
-                  title: Text(
-                    'Second Page',
-                    style: TextStyle(
-                      color: MyColors.secondaryColor,
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                elevation: 5,
-                child: ListTile(
-                  title: Text(
-                    'Cachorros',
-                    style: TextStyle(
-                      color: MyColors.secondaryColor,
-                    ),
-                  ),
-                ),
-              ),
-              Card(
-                elevation: 5,
-                child: ListTile(
-                  title: Text(
-                    'Gatos',
-                    style: TextStyle(
-                      color: MyColors.secondaryColor,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        drawer: const MyDrawer(),
         appBar: AppBar(
-          centerTitle: true,
           title: const Text(
             'HomePage',
           ),
