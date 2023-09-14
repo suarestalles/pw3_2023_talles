@@ -1,7 +1,8 @@
 import 'package:aprendendo_flutter/modules/cachorro/models/cachorro_model.dart';
+import 'package:aprendendo_flutter/modules/cachorro/widgets/form_cachorro.dart';
+import 'package:aprendendo_flutter/theme/my_colors.dart';
 import 'package:aprendendo_flutter/widgets/my_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class CachorroListPage extends StatefulWidget {
   const CachorroListPage({super.key});
@@ -51,6 +52,79 @@ class _CachorroListPageState extends State<CachorroListPage> {
     }
   }
 
+  void _update(Cachorro cachorro) {
+    if (_formKey.currentState?.validate() ?? false) {
+      var cachorroEdit = cachorros.firstWhere((element) => element == cachorro);
+      cachorros.removeWhere((element) => element == cachorro);
+
+      cachorroEdit.nome = _nomeController.text;
+      cachorroEdit.descricao = _descricaoController.text;
+      cachorroEdit.idade = int.parse(_idadeController.text);
+
+      setState(() {
+        cachorros.add(cachorroEdit);
+      });
+      Navigator.pop(context);
+    }
+  }
+
+  void _delete(Cachorro cachorro) {
+    setState(() {
+      cachorros.removeWhere((element) => element == cachorro);
+    });
+  }
+
+  void _create() {
+    clearFields();
+    var alert = AlertDialog(
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Novo Pet'),
+        ],
+      ),
+      content: FormCachorro(
+        formKey: _formKey,
+        nomeController: _nomeController,
+        descricaoController: _descricaoController,
+        idadeController: _idadeController,
+        onFieldSubmitted: (_) => _save(),
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => alert,
+    );
+  }
+
+  void _edit(Cachorro cachorro) {
+    _nomeController.text = cachorro.nome ?? '';
+    _descricaoController.text = cachorro.descricao ?? '';
+    _idadeController.text = cachorro.idade?.toString() ?? '';
+
+    var alert = AlertDialog(
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Editando Pet'),
+        ],
+      ),
+      content: FormCachorro(
+        formKey: _formKey,
+        nomeController: _nomeController,
+        descricaoController: _descricaoController,
+        idadeController: _idadeController,
+        onFieldSubmitted: (_) => _update(cachorro),
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => alert,
+    );
+  }
+
   clearFields() {
     _nomeController.text = '';
     _descricaoController.text = '';
@@ -68,84 +142,54 @@ class _CachorroListPageState extends State<CachorroListPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            clearFields();
-            var alert = AlertDialog(
-              title: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Novo Pet'),
-                ],
-              ),
-              content: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Nome:'),
-                      ),
-                      controller: _nomeController,
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Campo Obrigatório!'
-                          : null,
-                      keyboardType: TextInputType.text,
-                      onFieldSubmitted: (_) => _save(),
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Descrição:'),
-                      ),
-                      controller: _descricaoController,
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Campo Obrigatório!'
-                          : null,
-                      keyboardType: TextInputType.text,
-                      onFieldSubmitted: (_) => _save(),
-                    ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        label: Text('Idade:'),
-                      ),
-                      controller: _idadeController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) => value == null || value.isEmpty
-                          ? 'Campo Obrigatório!'
-                          : null,
-                      keyboardType: TextInputType.number,
-                      onFieldSubmitted: (_) => _save(),
-                    ),
-                  ],
-                ),
-              ),
-            );
-
-            showDialog(
-              context: context,
-              builder: (context) => alert,
-            );
-          },
+          onPressed: _create,
           child: const Icon(Icons.add),
         ),
         body: ListView.builder(
           itemCount: cachorros.length,
           itemBuilder: (ctx, index) {
-            return ListTile(
-              title: Text(cachorros[index].nome ?? '-'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Descrição: ${cachorros[index].descricao ?? '-'}',
-                  ),
-                  Text(
-                    'Idade: ${cachorros[index].idade}',
-                  ),
-                ],
+            return Card(
+              child: ListTile(
+                title: Text(
+                  cachorros[index].nome ?? '-',
+                  style: const TextStyle(color: Colors.white),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Descrição: ${cachorros[index].descricao ?? '-'}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      'Idade: ${cachorros[index].idade}',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () => _edit(cachorros[index]),
+                      icon: const Icon(
+                        Icons.edit,
+                        color: MyColors.secondaryColor,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => _delete(cachorros[index]),
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
